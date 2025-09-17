@@ -1,0 +1,25 @@
+- HauptDashboardmodultool mit moderner und optisch hochwertiger vollmodularer GUI
+- Globale Standards, best practices und Manifeste implementieren
+- perfekt ausgearbeitete auf Laien verwendung optimierte Hilfe und Führung im Tool
+- Vollautomatische erstellung einer virtuellen Umgebung mit prüfung und auflösung von abhängigkeiten mit nutzerfeedback
+- Entwicklerdokumentation
+- Vallidierung aller eingangs und ausgangsfunktionen und daten
+- sehr informatives und übersichtliches Dashboard mit hilfreichen statistika, anzeige datum uhrzeit und allgemeinen einstellungen, logging in echtzeit und tips sowie Uhrzeit und datum und speicherort.
+- Hoch perfektionierte Darstellung, Flexibilität aller Größen und Positionen der Fenster
+- Debuggingmodul für detailiertes logging und test, sowie problemlösungen die man durch drücken von buttons auslösen kann
+- navigation über tastatur ermöglichen
+- vollautomatische test implementieren
+- selfrepair und intelligentes fehler handling
+- maximal gute sichtbarkeit und farbwahl mit vier unterschiedlichen Farbthemes mit modernem Aussehen.
+- Ansicht auch auf kleineren Bildschirmen ermöglichen
+- Dynamische Anpassungen der Elemente und Fenster
+- Linke aufklappbare sidebar zur anzeige vorhandener module
+- professionelle analyse der besten Umsetzungen der GUI in bezug auf Optik, ansicht, darstellung, größe und farben
+- Mockup und Logo mit erstellen
+- infodatei mit verzeichnis und dateistruktur
+- Maximale konfiguration und optionen im tool und alles über die GUI einstellbar
+- Hauptfenster steuert untermodule, die sind maximierbar, deaktivierbar und ablösbar vom Hauptfenster
+- Notizbereich der persistent notizen speichert im Dashboard
+- autospeichern bei feldwechel und alle zehn minuten und beim schließen
+- Alle funktionen prüfen vorher auf vorhandensein, bei fehlen korrigiert tool selbstständig
+- detailierte fehlerbenennung, auch für laien verständlich mit auswahl einer Lösung über buttons
