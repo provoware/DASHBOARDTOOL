@@ -1,0 +1,17 @@
+# Offene Aufgaben für DASHBOARDTOOL
+- [ ] Projektgrundstruktur aufbauen (z.B. Quellcode-Ordner, Modul-Dateien, Tests)
+- [ ] Virtuelle Umgebung automatisch einrichten ("virtuelle Umgebung": abgeschottete Arbeitsumgebung für Python-Pakete)
+- [ ] Abhängigkeitsmanagement mit Nutzerfeedback implementieren ("Abhängigkeit": benötigtes Zusatzprogramm)
+- [ ] Haupt-Dashboard-GUI mit modularen Fenstern gestalten ("GUI": grafische Benutzeroberfläche)
+- [ ] Mehrere moderne Farbthemen entwerfen und umsetzen ("Theme": Farbschema)
+- [ ] Responsives Layout für große und kleine Bildschirme umsetzen ("responsiv": passt sich Bildschirmgröße an)
+- [ ] Linke, aufklappbare Sidebar für Modulauswahl erstellen ("Sidebar": Seitenleiste)
+- [ ] Untermodul-Steuerung mit Maximieren/Detach/Deaktivieren ermöglichen
+- [ ] Persistenten Notizbereich mit Autospeichern einbauen ("persistent": bleibt erhalten)
+- [ ] Echtzeit-Logging- und Debuggingmodul integrieren ("Logging": Protokollierung)
+- [ ] Automatische Tests und Selbstheilungsroutinen entwickeln
+- [ ] Validierung aller Ein- und Ausgaben einrichten ("Validierung": Überprüfung)
+- [ ] Benutzerfreundliche Fehlermeldungen mit Lösungsvorschlägen hinzufügen
+- [ ] Mockup und Logo gestalten
+- [ ] Ausführliche Nutzerhilfe und Entwicklerdokumentation schreiben
+- [ ] Informationsdatei zur Verzeichnis- und Dateistruktur erstellen
