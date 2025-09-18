@@ -18,3 +18,5 @@
 - [x] Ausführliche Nutzerhilfe und Entwicklerdokumentation schreiben
 - [x] Responsive Frontend-Implementierung mit Breakpoint-gesteuertem Grid anlegen
 - [x] Debug-Modul in die grafische Oberfläche einbetten (Live-Stream der Logdaten)
+- [x] HTML-Renderer und CLI-Export implementieren ("CLI": Kommandozeilenprogramm)
+- [x] Paketmetadaten für Release-Vorbereitung ergänzen

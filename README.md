@@ -24,10 +24,24 @@ Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
    make php-lint
    ```
 
+5. HTML-Vorschau erzeugen ("HTML": Webseiten-Code) – erstellt eine klickbare
+   Demo-Oberfläche inklusive Sidebar und Modulen:
+   ```bash
+   dashboardtool --output build/dashboard.html --format html
+   ```
+6. Rohdaten als JSON speichern ("JSON": Textstruktur) für Integrationen:
+   ```bash
+   dashboardtool --output build/dashboard.json --format json
+   ```
+
 ## Projektstruktur
 - `src/dashboardtool/`: Zentrale Konfigurationen, Themes und Layouts.
 - `src/dashboardtool/gui.py`: Baut die komplette GUI-Struktur samt Sidebar und
   Responsiv-Verhalten als leicht verständliches Datenobjekt auf.
+- `src/dashboardtool/frontend.py`: Wandelt das Datenobjekt in eine moderne
+  HTML-Oberfläche mit Grid-Layout und Stilvariablen um.
+- `src/dashboardtool/cli.py`: Kommandozeilenwerkzeug zum Export nach HTML oder
+  JSON für Vorschauen und Integrationstests.
 - `modules/`: Basismodul plus Beispiel-Module, alle folgen den Standards.
 - `modules/php/`: PHP-Komponenten, werden automatisch per `php -l` geprüft.
 - `tests/`: Pytest-basierte ("Pytest": Python-Testframework) Tests für Module und Checks.
@@ -65,6 +79,8 @@ Breakpoints ("Breakpoint": Umschaltpunkt für responsives Verhalten) stehen in
 - `DashboardApp` bündelt Module zu einem vollwertigen GUI-Modell inklusive
   Sidebar, Validierung und Selbstheilungs-Checks mit laienfreundlichen
   Lösungsvorschlägen pro Modul.
+- `dashboardtool` (Kommandozeile) exportiert die fertige Oberfläche als HTML
+  oder JSON und bildet damit die Brücke zum späteren GUI-Release.
 - Selbstheilung: Bei fehlenden Ressourcen muss das Modul automatisch Ersatz anlegen.
 - Barrierefreiheit hat Priorität: klare Kontraste, Fokus-Ringe, Screenreader-Texte.
 - Debugging-Tools speichern strukturierte JSON-Zeilen, sodass Support-Teams

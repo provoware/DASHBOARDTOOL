@@ -53,6 +53,14 @@
   print(app.render()["validation"])
   PY
   ```
+- **Komplette HTML-Vorschau erstellen:**
+  ```bash
+  dashboardtool --output build/dashboard.html --format html
+  ```
+- **Modell als JSON speichern ("JSON": Textstruktur):**
+  ```bash
+  dashboardtool --output build/dashboard.json --format json
+  ```
 
 ## Leitfaden für Entwicklerinnen und Entwickler
 - **Tests ausführen:** `make test`
@@ -76,6 +84,10 @@
   2. `identifier`, `display_name` und `description` setzen.
   3. In `render()` mindestens `component` und `title` liefern.
   4. Tests unter `tests/` ergänzen, damit die automatische Prüfung alles abdeckt.
+- **CLI-Ausgabe testen ("CLI": Kommandozeile):**
+  ```bash
+  python -m dashboardtool --output tmp/dashboard.html
+  ```
 - **Logs exportieren:**
   ```bash
   python - <<'PY'

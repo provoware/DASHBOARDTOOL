@@ -1,3 +1,29 @@
+[project]
+name = "dashboardtool"
+version = "0.1.0"
+description = "Modulares Dashboard mit laienfreundlicher GUI-Modellierung und HTML-Export"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "DashboardTool Team", email = "team@example.com" },
+]
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: User Interfaces",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://example.com/dashboardtool"
+Documentation = "https://example.com/dashboardtool/docs"
+
+[project.scripts]
+dashboardtool = "dashboardtool.cli:main"
+
 [tool.black]
 line-length = 88
 target-version = ["py311"]

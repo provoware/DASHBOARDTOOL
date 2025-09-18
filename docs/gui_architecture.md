@@ -31,6 +31,9 @@ Module und Hilfselemente zusammenspielen.
 - **Selbstheilung**: Für jedes Modul werden Fehlermeldungen gezählt und mit
   konkreten Lösungsvorschlägen (z.B. fehlende Pflichtfelder ergänzen) verknüpft,
   sodass auch Einsteiger Schritt für Schritt geführt werden.
+- **HTML-Export**: Über `dashboardtool --format html` entsteht aus dem Modell
+  automatisch eine klickbare Vorschau, die die oben skizzierten Bereiche
+  übernimmt.
 
 ## Logo-Idee
 
