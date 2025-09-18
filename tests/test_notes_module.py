@@ -10,7 +10,8 @@ def test_notes_module_respects_theme():
     assert payload["breakpoints"], "Breakpoints sollten vorhanden sein"
     assert "focus" in payload["keyboard_shortcuts"]
     assert "timer" in payload["autosave_triggers"]
-    assert payload["storage_directory"].endswith("notes")
+    tile = module.render_dashboard_tile()
+    assert tile["storage_directory"].endswith("notes")
 
 
 def test_notes_module_autosave_sets_timestamp():

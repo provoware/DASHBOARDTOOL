@@ -12,6 +12,7 @@ from .config import (
 from .themes import THEME_PRESETS, contrast_ratio, validate_theme_accessibility
 from .layout import LayoutSpec, DEFAULT_LAYOUT
 from .logging import LOG_LEVELS, LogBuffer, LogEntry
+from .gui import DashboardApp
 
 __all__ = [
     "DashboardConfig",
@@ -26,4 +27,5 @@ __all__ = [
     "LOG_LEVELS",
     "LogEntry",
     "LogBuffer",
+    "DashboardApp",
 ]

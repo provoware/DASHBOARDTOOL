@@ -26,12 +26,16 @@ Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
 
 ## Projektstruktur
 - `src/dashboardtool/`: Zentrale Konfigurationen, Themes und Layouts.
+- `src/dashboardtool/gui.py`: Baut die komplette GUI-Struktur samt Sidebar und
+  Responsiv-Verhalten als leicht verständliches Datenobjekt auf.
 - `modules/`: Basismodul plus Beispiel-Module, alle folgen den Standards.
 - `modules/php/`: PHP-Komponenten, werden automatisch per `php -l` geprüft.
 - `tests/`: Pytest-basierte ("Pytest": Python-Testframework) Tests für Module und Checks.
 - `tools/`: Skripte für Entwicklungsaufgaben, z.B. PHP-Syntaxprüfung und
   `venv_setup.py` für die automatische Umgebungseinrichtung.
-- `docs/`: Dokumentationen mit Modul-Standards und Design-Vorgaben.
+- `docs/`: Dokumentationen mit Modul-Standards und Design-Vorgaben. Die neue
+  Datei `docs/user_and_developer_guide.md` erklärt Bedienung und Erweiterung in
+  einfacher Sprache.
 
 ## Automatisierung
 - `make setup` legt eine neue virtuelle Umgebung an oder aktualisiert sie.
@@ -42,7 +46,8 @@ Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
 ## Verfügbare Module
 - **Notizbereich** (`modules/notes.py`): Speichert Texte persistent und liefert
   Autosave-Hinweise inklusive Auslöserliste ("Auslöser": Ereignis, das etwas
-  startet) sowie das Zielverzeichnis für Dateien.
+  startet). Die Oberfläche ergänzt das Zielverzeichnis automatisch aus den
+  Metadaten, sodass keine doppelten Angaben nötig sind.
 - **Diagnosemodul** (`modules/debug.py`): Schreibt Echtzeit-Logs ("Log":
   Protokollzeile) in `var/log/dashboardtool/debug.log`, stellt gefilterte Listen
   bereit und sorgt für Selbstheilung, indem alte Protokolle beim Start geladen
@@ -57,6 +62,9 @@ Breakpoints ("Breakpoint": Umschaltpunkt für responsives Verhalten) stehen in
 
 ## Weiterentwicklung
 - Module sollen sich an `ModuleStandard` orientieren und Tastenkürzel anbieten.
+- `DashboardApp` bündelt Module zu einem vollwertigen GUI-Modell inklusive
+  Sidebar, Validierung und Selbstheilungs-Checks mit laienfreundlichen
+  Lösungsvorschlägen pro Modul.
 - Selbstheilung: Bei fehlenden Ressourcen muss das Modul automatisch Ersatz anlegen.
 - Barrierefreiheit hat Priorität: klare Kontraste, Fokus-Ringe, Screenreader-Texte.
 - Debugging-Tools speichern strukturierte JSON-Zeilen, sodass Support-Teams

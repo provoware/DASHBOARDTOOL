@@ -3,10 +3,80 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from src.dashboardtool import DashboardConfig, DEFAULT_CONFIG
+from src.dashboardtool.config import DashboardConfig, DEFAULT_CONFIG
+
+
+@dataclass(frozen=True)
+class ModuleAction:
+    """Beschreibt eine Interaktionsmöglichkeit im Modul."""
+
+    name: str
+    label: str
+    description: str
+    shortcut: str | None = None
+
+    def to_dict(self) -> Dict[str, str]:
+        data = {
+            "name": self.name,
+            "label": self.label,
+            "description": self.description,
+        }
+        if self.shortcut:
+            data["shortcut"] = self.shortcut
+        return data
+
+
+@dataclass(frozen=True)
+class ModuleValidationResult:
+    """Hält Prüfhinweise für Modul-Daten fest."""
+
+    errors: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    solutions: list[str] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        """Säubert die Einträge und entfernt Dubletten."""
+
+        for field_name in ("errors", "warnings", "solutions"):
+            items = getattr(self, field_name)
+            seen: dict[str, None] = {}
+            cleaned: list[str] = []
+            for value in items:
+                if not value:
+                    continue
+                text = str(value).strip()
+                if not text or text in seen:
+                    continue
+                seen[text] = None
+                cleaned.append(text)
+            object.__setattr__(self, field_name, cleaned)
+
+    @property
+    def is_valid(self) -> bool:
+        return not self.errors
+
+    def summary(self) -> str:
+        """Gibt eine kurze, laienverständliche Zusammenfassung zurück."""
+
+        if self.errors:
+            return "Bitte fehlende Pflichtfelder ergänzen, Hinweise unten folgen."
+        if self.warnings:
+            return "Kleiner Hinweis: optionale Felder verbessern die Darstellung."
+        return "Alles in Ordnung – Modul ist vollständig vorbereitet."
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "is_valid": self.is_valid,
+            "errors": list(self.errors),
+            "warnings": list(self.warnings),
+            "solutions": list(dict.fromkeys(self.solutions)),
+            "summary": self.summary(),
+            "checked_at": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+        }
 
 
 @dataclass
@@ -28,7 +98,12 @@ class ModuleContext:
         """Stellt das Speicherverzeichnis für ein Modul bereit."""
 
         safe_identifier = module_identifier or "module"
-        target = self.storage_path / safe_identifier
+        sanitized = "".join(
+            ch if ch.isalnum() or ch in {"-", "_"} else "_" for ch in safe_identifier
+        ).strip("_")
+        if not sanitized:
+            sanitized = "module"
+        target = self.storage_path / sanitized
         target.mkdir(parents=True, exist_ok=True)
         return target
 
@@ -52,10 +127,169 @@ class DashboardModule:
         self.layout_spec = self.context.config.standards
         self.storage_directory = self.context.ensure_storage_dir(self.identifier)
 
+    def _default_theme(self) -> Dict[str, str]:
+        """Wählt ein Basisfarbschema als Fallback."""
+
+        themes = self.context.config.themes
+        if "aurora" in themes:
+            return dict(themes["aurora"])
+        if themes:
+            first_theme = next(iter(themes.values()))
+            return dict(first_theme)
+        return {}
+
     def render(self) -> Dict[str, Any]:
         """Erzeugt strukturierte Daten für die GUI-Schicht."""
 
         raise NotImplementedError("Module müssen die render-Methode überschreiben.")
+
+    # ------------------------------------------------------------------
+    # Komfortfunktionen für die GUI-Schicht
+    # ------------------------------------------------------------------
+    def _validate_payload(self, payload: Dict[str, Any]) -> ModuleValidationResult:
+        """Prüft die von `render` gelieferten Daten."""
+
+        errors: list[str] = []
+        warnings: list[str] = []
+        solutions: list[str] = []
+        required = {"component", "title"}
+        for key in required:
+            if key not in payload:
+                errors.append(f"Pflichtfeld '{key}' fehlt. Bitte in render() ergänzen.")
+                solutions.append(
+                    "Bitte den Schlüssel "
+                    f"'{key}' im Rückgabewert von render() ergänzen, damit die "
+                    "Oberfläche weiß, was dargestellt wird."
+                )
+
+        theme = payload.get("theme")
+        if theme is None:
+            warnings.append(
+                "Theme fehlt. Es wird automatisch ein Standardfarbschema ergänzt."
+            )
+            solutions.append(
+                "Für eigene Farben im Modul `context.config.get_theme(...)` nutzen "
+                "und das Ergebnis unter 'theme' hinterlegen."
+            )
+        elif isinstance(theme, dict):
+            missing_theme_keys = {"background", "surface", "text_primary"} - set(theme)
+            if missing_theme_keys:
+                warnings.append(
+                    "Theme ist unvollständig. Fehlende Schlüssel: "
+                    + ", ".join(sorted(missing_theme_keys))
+                )
+                solutions.append(
+                    "Bitte die genannten Farbwerte ergänzen, damit Texte und Flächen "
+                    "gut lesbar bleiben."
+                )
+        else:
+            errors.append("Theme muss ein Wörterbuch mit Farbwerten sein.")
+            solutions.append(
+                "Theme bitte als Wörterbuch (z.B. {'background': '#000000', ...}) liefern."
+            )
+
+        shortcuts = payload.get("keyboard_shortcuts")
+        if shortcuts is None:
+            warnings.append(
+                "Tastenkürzel fehlen. Es werden Standardwerte aus der Konfiguration ergänzt."
+            )
+            solutions.append(
+                "Eigene Tastenkürzel können unter 'keyboard_shortcuts' als Wörterbuch "
+                "mit verständlichen Kürzeln ergänzt werden."
+            )
+        elif not isinstance(shortcuts, dict):
+            errors.append("Tastenkürzel müssen als Wörterbuch mit Befehlen vorliegen.")
+            solutions.append(
+                "Bitte 'keyboard_shortcuts' als Wörterbuch angeben, z.B. {'focus': 'CTRL+ALT+F'}."
+            )
+
+        return ModuleValidationResult(
+            errors=errors, warnings=warnings, solutions=solutions
+        )
+
+    def available_actions(self) -> list[ModuleAction]:
+        """Erzeugt eine Liste unterstützter Standardaktionen."""
+
+        shortcuts = self.context.config.standards.keyboard_shortcuts
+        actions: list[ModuleAction] = [
+            ModuleAction(
+                name="focus",
+                label="Fokus",
+                description="Bringt das Modul per Tastatur in den Vordergrund.",
+                shortcut=shortcuts.get("focus"),
+            ),
+            ModuleAction(
+                name="toggle_visibility",
+                label="Ein-/Ausblenden",
+                description="Zeigt oder versteckt das Modul.",
+                shortcut=shortcuts.get("toggle_visibility"),
+            ),
+        ]
+
+        if self.layout_spec.allow_maximize:
+            actions.append(
+                ModuleAction(
+                    name="maximize",
+                    label="Maximieren",
+                    description="Schaltet zwischen Standard- und Vollbildansicht um.",
+                    shortcut=shortcuts.get("maximize"),
+                )
+            )
+        if self.layout_spec.allow_detach:
+            actions.append(
+                ModuleAction(
+                    name="detach",
+                    label="Fenster lösen",
+                    description="Öffnet das Modul in einem separaten Fenster.",
+                    shortcut=shortcuts.get("detach"),
+                )
+            )
+        return actions
+
+    def layout_defaults(self) -> Dict[str, Any]:
+        """Stellt Layout-Informationen für Frontends bereit."""
+
+        return {
+            "min_width": self.layout_spec.min_width,
+            "min_height": self.layout_spec.min_height,
+            "padding": self.layout_spec.padding,
+            "allow_detach": self.layout_spec.allow_detach,
+            "allow_maximize": self.layout_spec.allow_maximize,
+        }
+
+    def render_dashboard_tile(self) -> Dict[str, Any]:
+        """Reichert das Render-Ergebnis mit Metadaten an."""
+
+        payload = dict(self.render())
+        validation = self._validate_payload(payload)
+        fallback_theme = self._default_theme()
+        theme = payload.get("theme")
+        if isinstance(theme, dict):
+            theme = {**fallback_theme, **theme}
+        else:
+            theme = fallback_theme
+        raw_shortcuts = payload.get("keyboard_shortcuts")
+        if isinstance(raw_shortcuts, dict):
+            shortcuts = dict(raw_shortcuts)
+        else:
+            shortcuts = dict(self.context.config.standards.keyboard_shortcuts)
+        payload["theme"] = theme
+        payload["keyboard_shortcuts"] = shortcuts
+
+        return {
+            "identifier": self.identifier,
+            "display_name": self.display_name,
+            "description": self.description,
+            "component": payload.get("component", self.identifier),
+            "payload": payload,
+            "actions": [action.to_dict() for action in self.available_actions()],
+            "layout": self.layout_defaults(),
+            "shortcuts": shortcuts,
+            "validation": validation.to_dict(),
+            "storage_directory": str(
+                payload.get("storage_directory", self.storage_directory)
+            ),
+        }
 
     def autosave(self) -> None:
         """Standard-Autosave, kann überschrieben werden."""

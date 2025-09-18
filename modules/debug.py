@@ -96,17 +96,54 @@ class DebugModule(DashboardModule):
     def render(self) -> Dict[str, Any]:
         """Bereitet Daten für die GUI auf."""
 
+        entries = self.get_recent()
         return {
             "component": "debug",
             "title": self.display_name,
             "theme": self.theme,
-            "entries": self.get_recent(),
+            "entries": entries,
             "log_levels": list(LOG_LEVELS),
-            "storage_directory": str(self.storage_directory),
             "log_file": str(self.log_file),
             "loaded_entries": self._loaded_entries,
             "keyboard_shortcuts": self.context.config.standards.keyboard_shortcuts,
             "breakpoints": self.context.config.responsive_profile.as_dicts(),
+            "status": {
+                "loaded_entries": self._loaded_entries,
+                "current_entries": len(entries),
+                "log_file_exists": self.log_file.exists(),
+            },
+            "toolbar": [
+                {
+                    "action": "refresh",
+                    "label": "Aktualisieren",
+                    "description": "Lädt neue Protokolle nach.",
+                    "shortcut": "CTRL+ALT+R",
+                },
+                {
+                    "action": "export",
+                    "label": "Protokoll exportieren",
+                    "description": "Speichert die aktuelle Liste als JSON-Datei.",
+                    "shortcut": "CTRL+ALT+E",
+                },
+                {
+                    "action": "clear",
+                    "label": "Protokoll leeren",
+                    "description": "Entfernt alle Einträge und leert die Datei.",
+                    "shortcut": self.context.config.standards.keyboard_shortcuts.get(
+                        "toggle_visibility"
+                    ),
+                },
+            ],
+            "stream": {
+                "endpoint": "/api/debug/logs",
+                "method": "GET",
+                "poll_interval_seconds": 5,
+                "available_filters": {"levels": list(LOG_LEVELS)},
+            },
+            "tips": [
+                "Nutze die Filter, um Warnungen (Warnungen: Hinweise) schneller zu finden.",
+                "Mit 'Fenster lösen' lässt sich das Debugfenster auf einen zweiten Monitor ziehen.",
+            ],
         }
 
     def export_snapshot(self, destination: Path) -> Path:
