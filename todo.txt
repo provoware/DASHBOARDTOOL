@@ -4,8 +4,8 @@
 - [x] Automatische Tests und Selbstheilungsroutinen vorbereiten (Pytest-Grundgerüst + PHP-Check)
 - [x] Mehrere moderne Farbthemen entwerfen und umsetzen ("Theme": Farbschema)
 - [x] Informationsdatei zur Verzeichnis- und Dateistruktur erstellen
-- [ ] Virtuelle Umgebung automatisch einrichten ("virtuelle Umgebung": abgeschottete Arbeitsumgebung für Python-Pakete)
-- [ ] Abhängigkeitsmanagement mit Nutzerfeedback implementieren ("Abhängigkeit": benötigtes Zusatzprogramm)
+- [x] Virtuelle Umgebung automatisch einrichten ("virtuelle Umgebung": abgeschottete Arbeitsumgebung für Python-Pakete)
+- [x] Abhängigkeitsmanagement mit Nutzerfeedback implementieren ("Abhängigkeit": benötigtes Zusatzprogramm)
 - [ ] Haupt-Dashboard-GUI mit modularen Fenstern gestalten ("GUI": grafische Benutzeroberfläche)
 - [ ] Responsives Layout für große und kleine Bildschirme umsetzen ("responsiv": passt sich Bildschirmgröße an)
 - [ ] Linke, aufklappbare Sidebar für Modulauswahl erstellen ("Sidebar": Seitenleiste)
@@ -16,3 +16,4 @@
 - [ ] Benutzerfreundliche Fehlermeldungen mit Lösungsvorschlägen hinzufügen
 - [ ] Mockup und Logo gestalten
 - [ ] Ausführliche Nutzerhilfe und Entwicklerdokumentation schreiben
+- [ ] Responsive Frontend-Implementierung mit Breakpoint-gesteuertem Grid anlegen

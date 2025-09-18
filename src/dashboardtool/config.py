@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from .themes import THEME_PRESETS
 
@@ -32,11 +32,56 @@ class ModuleStandard:
 
 
 @dataclass(frozen=True)
+class ResponsiveBreakpoint:
+    """Beschreibt einen Layout-Breakpoint ("Breakpoint": Umschaltpunkt)."""
+
+    name: str
+    min_width: int
+    columns: int
+    max_module_width: int
+
+    def to_dict(self) -> Dict[str, int | str]:
+        return {
+            "name": self.name,
+            "min_width": self.min_width,
+            "columns": self.columns,
+            "max_module_width": self.max_module_width,
+        }
+
+
+@dataclass(frozen=True)
+class ResponsiveLayoutProfile:
+    """Hält mehrere Breakpoints für responsive Ansichten."""
+
+    breakpoints: Tuple[ResponsiveBreakpoint, ...] = (
+        ResponsiveBreakpoint("mobile", 0, 4, 360),
+        ResponsiveBreakpoint("tablet", 768, 8, 480),
+        ResponsiveBreakpoint("desktop", 1280, 12, 640),
+        ResponsiveBreakpoint("wide", 1600, 12, 820),
+    )
+
+    def for_width(self, width: int) -> ResponsiveBreakpoint:
+        """Liefert den passenden Breakpoint für eine Breite."""
+
+        active = self.breakpoints[0]
+        for breakpoint in sorted(self.breakpoints, key=lambda bp: bp.min_width):
+            if width >= breakpoint.min_width:
+                active = breakpoint
+        return active
+
+    def as_dicts(self) -> List[Dict[str, int | str]]:
+        """Praktische Darstellung für GUI- oder Dokumentationszwecke."""
+
+        return [bp.to_dict() for bp in self.breakpoints]
+
+
+@dataclass(frozen=True)
 class DashboardConfig:
     """Zentrale Konfigurationsdaten für das Dashboard."""
 
     standards: ModuleStandard = ModuleStandard()
     themes: Dict[str, Dict[str, str]] = field(default_factory=lambda: THEME_PRESETS)
+    responsive_profile: ResponsiveLayoutProfile = ResponsiveLayoutProfile()
     autosave_interval_minutes: int = 10
     autosave_triggers: List[str] = field(
         default_factory=lambda: ["field_change", "timer", "on_exit"]
@@ -53,6 +98,12 @@ class DashboardConfig:
                 f"Theme '{name}' nicht gefunden. Verfügbare Themes: {available}."
             )
         return self.themes[name]
+
+    def breakpoint_for_width(self, width: int) -> Dict[str, int | str]:
+        """Gibt passende responsive Layout-Daten für eine Breite zurück."""
+
+        breakpoint = self.responsive_profile.for_width(width)
+        return breakpoint.to_dict()
 
 
 DEFAULT_CONFIG = DashboardConfig()

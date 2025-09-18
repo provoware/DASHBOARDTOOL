@@ -2,7 +2,54 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Iterable, Tuple
+
+
+def _hex_to_rgb(value: str) -> Tuple[float, float, float]:
+    """Konvertiert HEX-Farben in RGB-Werte zwischen 0 und 1."""
+
+    value = value.lstrip("#")
+    if len(value) != 6:
+        raise ValueError("Farben müssen im Format #RRGGBB vorliegen, z.B. '#112233'.")
+    return tuple(int(value[i : i + 2], 16) / 255 for i in (0, 2, 4))  # type: ignore[misc]
+
+
+def _relative_luminance(rgb: Tuple[float, float, float]) -> float:
+    """Berechnet die relative Helligkeit gemäß WCAG 2.1."""
+
+    def transform(channel: float) -> float:
+        if channel <= 0.03928:
+            return channel / 12.92
+        return ((channel + 0.055) / 1.055) ** 2.4
+
+    r, g, b = map(transform, rgb)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def contrast_ratio(color_a: str, color_b: str) -> float:
+    """Berechnet den Kontrast zwischen zwei HEX-Farben."""
+
+    lum_a = _relative_luminance(_hex_to_rgb(color_a))
+    lum_b = _relative_luminance(_hex_to_rgb(color_b))
+    lighter, darker = max(lum_a, lum_b), min(lum_a, lum_b)
+    return (lighter + 0.05) / (darker + 0.05)
+
+
+def validate_theme_accessibility(theme: Dict[str, str]) -> Dict[str, float]:
+    """Prüft wichtige Kontrastverhältnisse und liefert sie zurück."""
+
+    pairs: Iterable[Tuple[str, str]] = (
+        ("text_primary", "background"),
+        ("text_primary", "surface"),
+        ("text_secondary", "background"),
+    )
+    return {
+        f"{foreground}_vs_{background}": contrast_ratio(
+            theme[foreground], theme[background]
+        )
+        for foreground, background in pairs
+        if foreground in theme and background in theme
+    }
 
 
 THEME_PRESETS: Dict[str, Dict[str, str]] = {

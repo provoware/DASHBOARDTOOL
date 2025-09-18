@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Tuple
 
+from .config import ResponsiveLayoutProfile
+
 
 @dataclass(frozen=True)
 class LayoutSpec:
@@ -32,6 +34,19 @@ class LayoutSpec:
             "--header-height": f"{self.header_height}px",
             "--footer-height": f"{self.footer_height}px",
         }
+
+    def to_css_with_breakpoints(
+        self, profile: ResponsiveLayoutProfile
+    ) -> Dict[str, str]:
+        """Erweitert CSS-Variablen um responsive Breakpoints."""
+
+        variables = self.to_css_variables()
+        for breakpoint in profile.breakpoints:
+            prefix = f"--bp-{breakpoint.name}"
+            variables[f"{prefix}-min-width"] = f"{breakpoint.min_width}px"
+            variables[f"{prefix}-columns"] = str(breakpoint.columns)
+            variables[f"{prefix}-max-module-width"] = f"{breakpoint.max_module_width}px"
+        return variables
 
 
 DEFAULT_LAYOUT = LayoutSpec()

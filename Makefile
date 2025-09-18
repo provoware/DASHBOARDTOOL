@@ -1,8 +1,9 @@
-.PHONY: install format test php-lint lint
+.PHONY: install setup format test php-lint lint
 
-install:
-	python3 -m venv .venv
-	. .venv/bin/activate && pip install -r requirements-dev.txt
+install: setup
+
+setup:
+	python3 -m tools.venv_setup
 
 format:
 	black src modules tools tests

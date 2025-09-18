@@ -4,12 +4,13 @@ Dieses Projekt bildet die Grundlage für ein modulares Dashboard mit hohen
 Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
 
 ## Schnellstart
-1. Virtuelle Umgebung ("virtuelle Umgebung": abgeschottete Arbeitsumgebung) anlegen:
+1. Vollautomatische Einrichtung der virtuellen Umgebung ("virtuelle Umgebung":
+   abgeschottete Arbeitsumgebung) inklusive Abhängigkeiten:
    ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements-dev.txt
+   make setup
    ```
+   Der Befehl ruft `python -m tools.venv_setup` auf und liefert leicht verständliche
+   Rückmeldungen.
 2. Code formatieren ("Formatierer": Werkzeug für einheitlichen Code-Stil):
    ```bash
    make format
@@ -28,18 +29,22 @@ Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
 - `modules/`: Basismodul plus Beispiel-Module, alle folgen den Standards.
 - `modules/php/`: PHP-Komponenten, werden automatisch per `php -l` geprüft.
 - `tests/`: Pytest-basierte ("Pytest": Python-Testframework) Tests für Module und Checks.
-- `tools/`: Skripte für Entwicklungsaufgaben, z.B. PHP-Syntaxprüfung.
+- `tools/`: Skripte für Entwicklungsaufgaben, z.B. PHP-Syntaxprüfung und
+  `venv_setup.py` für die automatische Umgebungseinrichtung.
 - `docs/`: Dokumentationen mit Modul-Standards und Design-Vorgaben.
 
 ## Automatisierung
+- `make setup` legt eine neue virtuelle Umgebung an oder aktualisiert sie.
 - `make format` ruft `black` auf, um Python-Dateien zu formatieren.
 - `make lint` führt Formatierung plus Pytest und PHP-Check aus.
 - `make php-lint` verwendet `tools/php_syntax_check.py`.
 
 ## Farb- und Layoutrichtlinien
-Die Datei `src/dashboardtool/themes.py` definiert vier kontrastreiche Farbwelten.
-Layout-Vorgaben sind in `src/dashboardtool/layout.py` dokumentiert. Weitere Details
-zu Modul-Standards stehen in `docs/module_standards.md`.
+Die Datei `src/dashboardtool/themes.py` definiert vier kontrastreiche Farbwelten und
+liefert Hilfsfunktionen, um Kontrastwerte zu prüfen. Layout-Vorgaben inklusive
+Breakpoints ("Breakpoint": Umschaltpunkt für responsives Verhalten) stehen in
+`src/dashboardtool/layout.py`. Weitere Details zu Modul-Standards finden sich in
+`docs/module_standards.md`.
 
 ## Weiterentwicklung
 - Module sollen sich an `ModuleStandard` orientieren und Tastenkürzel anbieten.

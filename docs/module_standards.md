@@ -10,6 +10,8 @@ Bedienung und Optik konsistent bleiben.
   und Ablösen anbieten (siehe `ModuleStandard.keyboard_shortcuts`).
 - Seitenleiste ("Sidebar": Seitenleiste) nutzt 22% der Gesamtbreite. Auf kleineren
   Bildschirmen darf sie einklappen.
+- Nutze die Breakpoints ("Breakpoint": Umschaltpunkt) aus `ResponsiveLayoutProfile`
+  für mobile, Tablet-, Desktop- und Wide-Layouts.
 
 ## Farb- und Sichtbarkeitskonzept
 - Wähle eines der vier definierten Themes (`aurora`, `sunrise`, `forest`, `monochrome`).
