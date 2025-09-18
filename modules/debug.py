@@ -103,7 +103,6 @@ class DebugModule(DashboardModule):
             "theme": self.theme,
             "entries": entries,
             "log_levels": list(LOG_LEVELS),
-            "storage_directory": str(self.storage_directory),
             "log_file": str(self.log_file),
             "loaded_entries": self._loaded_entries,
             "keyboard_shortcuts": self.context.config.standards.keyboard_shortcuts,

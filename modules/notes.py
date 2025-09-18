@@ -36,7 +36,6 @@ class NotesModule(DashboardModule):
             "autosave_triggers": self.context.config.autosave_triggers,
             "breakpoints": self.context.config.responsive_profile.as_dicts(),
             "keyboard_shortcuts": self.context.config.standards.keyboard_shortcuts,
-            "storage_directory": str(self.storage_directory),
             "status": {
                 "last_saved": last_saved,
                 "entries": len(self._storage),
@@ -47,9 +46,7 @@ class NotesModule(DashboardModule):
                     "action": "autosave_now",
                     "label": "Jetzt speichern",
                     "description": "Speichert die aktuelle Notiz sofort.",
-                    "shortcut": self.context.config.standards.keyboard_shortcuts.get(
-                        "maximize"
-                    ),
+                    "shortcut": "CTRL+ALT+S",
                 },
                 {
                     "action": "create_note",

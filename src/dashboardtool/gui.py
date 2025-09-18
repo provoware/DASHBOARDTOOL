@@ -194,19 +194,29 @@ class DashboardApp:
         module_results = {
             tile["identifier"]: tile["validation"] for tile in module_tiles
         }
+        error_count = sum(len(result["errors"]) for result in module_results.values())
+        warning_count = sum(
+            len(result["warnings"]) for result in module_results.values()
+        )
         has_errors = any(not result["is_valid"] for result in module_results.values())
         return {
             "modules": module_results,
             "has_errors": has_errors,
+            "error_count": error_count,
+            "warning_count": warning_count,
         }
 
     def _self_healing(self, module_tiles: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
         recovery_actions: List[str] = []
         for tile in module_tiles:
-            if not tile["validation"]["is_valid"]:
+            validation = tile["validation"]
+            if not validation["is_valid"]:
                 recovery_actions.append(
                     f"Modul '{tile['display_name']}' meldet fehlende Felder."
                 )
+                recovery_actions.extend(validation.get("solutions", []))
+            elif validation.get("warnings"):
+                recovery_actions.extend(validation.get("solutions", []))
         if not recovery_actions:
             recovery_actions.append(
                 "Alle Module liefern vollständige Daten – keine Sofortmaßnahmen nötig."

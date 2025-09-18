@@ -28,6 +28,9 @@ Module und Hilfselemente zusammenspielen.
   Speicherorte, damit Laien nachvollziehen können, wo Daten liegen.
 - **Themes**: Vier vorkonfigurierte Farbwelten mit Kontrastbericht, damit auch
   ohne Fachwissen ein gutes Design gewählt werden kann.
+- **Selbstheilung**: Für jedes Modul werden Fehlermeldungen gezählt und mit
+  konkreten Lösungsvorschlägen (z.B. fehlende Pflichtfelder ergänzen) verknüpft,
+  sodass auch Einsteiger Schritt für Schritt geführt werden.
 
 ## Logo-Idee
 

@@ -44,7 +44,8 @@ Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
 ## Verfügbare Module
 - **Notizbereich** (`modules/notes.py`): Speichert Texte persistent und liefert
   Autosave-Hinweise inklusive Auslöserliste ("Auslöser": Ereignis, das etwas
-  startet) sowie das Zielverzeichnis für Dateien.
+  startet). Die Oberfläche ergänzt das Zielverzeichnis automatisch aus den
+  Metadaten, sodass keine doppelten Angaben nötig sind.
 - **Diagnosemodul** (`modules/debug.py`): Schreibt Echtzeit-Logs ("Log":
   Protokollzeile) in `var/log/dashboardtool/debug.log`, stellt gefilterte Listen
   bereit und sorgt für Selbstheilung, indem alte Protokolle beim Start geladen
@@ -60,7 +61,8 @@ Breakpoints ("Breakpoint": Umschaltpunkt für responsives Verhalten) stehen in
 ## Weiterentwicklung
 - Module sollen sich an `ModuleStandard` orientieren und Tastenkürzel anbieten.
 - `DashboardApp` bündelt Module zu einem vollwertigen GUI-Modell inklusive
-  Sidebar, Validierung und Selbstheilungs-Checks.
+  Sidebar, Validierung und Selbstheilungs-Checks mit laienfreundlichen
+  Lösungsvorschlägen pro Modul.
 - Selbstheilung: Bei fehlenden Ressourcen muss das Modul automatisch Ersatz anlegen.
 - Barrierefreiheit hat Priorität: klare Kontraste, Fokus-Ringe, Screenreader-Texte.
 - Debugging-Tools speichern strukturierte JSON-Zeilen, sodass Support-Teams

@@ -36,16 +36,28 @@ class ModuleValidationResult:
 
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
+    solutions: list[str] = field(default_factory=list)
 
     @property
     def is_valid(self) -> bool:
         return not self.errors
+
+    def summary(self) -> str:
+        """Gibt eine kurze, laienverständliche Zusammenfassung zurück."""
+
+        if self.errors:
+            return "Bitte fehlende Pflichtfelder ergänzen, Hinweise unten folgen."
+        if self.warnings:
+            return "Kleiner Hinweis: optionale Felder verbessern die Darstellung."
+        return "Alles in Ordnung – Modul ist vollständig vorbereitet."
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "is_valid": self.is_valid,
             "errors": list(self.errors),
             "warnings": list(self.warnings),
+            "solutions": list(dict.fromkeys(self.solutions)),
+            "summary": self.summary(),
             "checked_at": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
         }
 
@@ -106,15 +118,24 @@ class DashboardModule:
 
         errors: list[str] = []
         warnings: list[str] = []
+        solutions: list[str] = []
         required = {"component", "title"}
         for key in required:
             if key not in payload:
                 errors.append(f"Pflichtfeld '{key}' fehlt. Bitte in render() ergänzen.")
+                solutions.append(
+                    "Im Modul bitte den Schlüssel 'component' und 'title' setzen, "
+                    "damit die Oberfläche weiß, was angezeigt werden soll."
+                )
 
         theme = payload.get("theme")
         if theme is None:
             warnings.append(
                 "Theme fehlt. Es wird automatisch ein Standardfarbschema ergänzt."
+            )
+            solutions.append(
+                "Für eigene Farben im Modul `context.config.get_theme(...)` nutzen "
+                "und das Ergebnis unter 'theme' hinterlegen."
             )
         elif isinstance(theme, dict):
             missing_theme_keys = {"background", "surface", "text_primary"} - set(theme)
@@ -123,16 +144,29 @@ class DashboardModule:
                     "Theme ist unvollständig. Fehlende Schlüssel: "
                     + ", ".join(sorted(missing_theme_keys))
                 )
+                solutions.append(
+                    "Bitte die genannten Farbwerte ergänzen, damit Texte und Flächen "
+                    "gut lesbar bleiben."
+                )
         else:
             errors.append("Theme muss ein Wörterbuch mit Farbwerten sein.")
+            solutions.append(
+                "Theme bitte als Wörterbuch (z.B. {'background': '#000000', ...}) liefern."
+            )
 
         shortcuts = payload.get("keyboard_shortcuts")
         if shortcuts is None:
             warnings.append(
                 "Tastenkürzel fehlen. Es werden Standardwerte aus der Konfiguration ergänzt."
             )
+            solutions.append(
+                "Eigene Tastenkürzel können unter 'keyboard_shortcuts' als Wörterbuch "
+                "mit verständlichen Kürzeln ergänzt werden."
+            )
 
-        return ModuleValidationResult(errors=errors, warnings=warnings)
+        return ModuleValidationResult(
+            errors=errors, warnings=warnings, solutions=solutions
+        )
 
     def available_actions(self) -> list[ModuleAction]:
         """Erzeugt eine Liste unterstützter Standardaktionen."""
@@ -209,7 +243,9 @@ class DashboardModule:
             "layout": self.layout_defaults(),
             "shortcuts": shortcuts,
             "validation": validation.to_dict(),
-            "storage_directory": str(self.storage_directory),
+            "storage_directory": str(
+                payload.get("storage_directory", self.storage_directory)
+            ),
         }
 
     def autosave(self) -> None:

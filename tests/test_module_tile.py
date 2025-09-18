@@ -13,4 +13,6 @@ def test_render_dashboard_tile_contains_metadata(tmp_path: Path) -> None:
     assert tile["layout"]["min_width"] == context.config.standards.min_width
     assert any(action["name"] == "detach" for action in tile["actions"])
     assert tile["validation"]["is_valid"]
+    assert tile["validation"]["solutions"] == []
+    assert "summary" in tile["validation"]
     assert tile["payload"]["theme"]["background"].startswith("#")
