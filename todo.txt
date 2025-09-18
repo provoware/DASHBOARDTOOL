@@ -6,15 +6,15 @@
 - [x] Informationsdatei zur Verzeichnis- und Dateistruktur erstellen
 - [x] Virtuelle Umgebung automatisch einrichten ("virtuelle Umgebung": abgeschottete Arbeitsumgebung für Python-Pakete)
 - [x] Abhängigkeitsmanagement mit Nutzerfeedback implementieren ("Abhängigkeit": benötigtes Zusatzprogramm)
-- [ ] Haupt-Dashboard-GUI mit modularen Fenstern gestalten ("GUI": grafische Benutzeroberfläche)
-- [ ] Responsives Layout für große und kleine Bildschirme umsetzen ("responsiv": passt sich Bildschirmgröße an)
-- [ ] Linke, aufklappbare Sidebar für Modulauswahl erstellen ("Sidebar": Seitenleiste)
-- [ ] Untermodul-Steuerung mit Maximieren/Detach/Deaktivieren ermöglichen
-- [ ] Persistenten Notizbereich mit Autospeichern einbauen ("persistent": bleibt erhalten)
+- [x] Haupt-Dashboard-GUI mit modularen Fenstern gestalten ("GUI": grafische Benutzeroberfläche)
+- [x] Responsives Layout für große und kleine Bildschirme umsetzen ("responsiv": passt sich Bildschirmgröße an)
+- [x] Linke, aufklappbare Sidebar für Modulauswahl erstellen ("Sidebar": Seitenleiste)
+- [x] Untermodul-Steuerung mit Maximieren/Detach/Deaktivieren ermöglichen
+- [x] Persistenten Notizbereich mit Autospeichern einbauen ("persistent": bleibt erhalten)
 - [x] Echtzeit-Logging- und Debuggingmodul integrieren ("Logging": Protokollierung)
-- [ ] Validierung aller Ein- und Ausgaben einrichten ("Validierung": Überprüfung)
+- [x] Validierung aller Ein- und Ausgaben einrichten ("Validierung": Überprüfung)
 - [ ] Benutzerfreundliche Fehlermeldungen mit Lösungsvorschlägen hinzufügen
-- [ ] Mockup und Logo gestalten
+- [x] Mockup und Logo gestalten
 - [ ] Ausführliche Nutzerhilfe und Entwicklerdokumentation schreiben
-- [ ] Responsive Frontend-Implementierung mit Breakpoint-gesteuertem Grid anlegen
-- [ ] Debug-Modul in die grafische Oberfläche einbetten (Live-Stream der Logdaten)
+- [x] Responsive Frontend-Implementierung mit Breakpoint-gesteuertem Grid anlegen
+- [x] Debug-Modul in die grafische Oberfläche einbetten (Live-Stream der Logdaten)

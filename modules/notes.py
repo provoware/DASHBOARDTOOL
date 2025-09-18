@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from modules.base import DashboardModule
 
@@ -19,9 +19,15 @@ class NotesModule(DashboardModule):
         super().__init__(**kwargs)
         self._storage = storage_backend if storage_backend is not None else {}
         self._last_saved: datetime | None = None
+        self._autosave_log: List[str] = []
 
     def render(self) -> Dict[str, Any]:
         theme = self.context.config.get_theme("aurora")
+        last_saved = (
+            self._last_saved.replace(microsecond=0).isoformat() + "Z"
+            if self._last_saved
+            else None
+        )
         return {
             "component": "notes",
             "title": self.display_name,
@@ -31,6 +37,28 @@ class NotesModule(DashboardModule):
             "breakpoints": self.context.config.responsive_profile.as_dicts(),
             "keyboard_shortcuts": self.context.config.standards.keyboard_shortcuts,
             "storage_directory": str(self.storage_directory),
+            "status": {
+                "last_saved": last_saved,
+                "entries": len(self._storage),
+                "autosave_log": list(self._autosave_log[-5:]),
+            },
+            "toolbar": [
+                {
+                    "action": "autosave_now",
+                    "label": "Jetzt speichern",
+                    "description": "Speichert die aktuelle Notiz sofort.",
+                    "shortcut": self.context.config.standards.keyboard_shortcuts.get(
+                        "maximize"
+                    ),
+                },
+                {
+                    "action": "create_note",
+                    "label": "Neue Notiz",
+                    "description": "Legt eine leere Notiz mit Zeitstempel an.",
+                    "shortcut": "CTRL+ALT+N",
+                },
+            ],
+            "notes_index": self.list_note_ids(),
         }
 
     def write(self, note_id: str, content: str) -> None:
@@ -41,10 +69,15 @@ class NotesModule(DashboardModule):
         timestamp = datetime.utcnow().isoformat()
         self._storage[note_id] = {"content": content, "timestamp": timestamp}
         self._last_saved = datetime.utcnow()
+        self._autosave_log.append(
+            f"{self._last_saved.replace(microsecond=0).isoformat()}Z: '{note_id}' gespeichert"
+        )
 
     def autosave(self) -> None:
-        if self._last_saved is None:
-            self._last_saved = datetime.utcnow()
+        self._last_saved = datetime.utcnow()
+        self._autosave_log.append(
+            f"{self._last_saved.replace(microsecond=0).isoformat()}Z: Autosave ausgeführt"
+        )
 
     @property
     def storage(self) -> Dict[str, Any]:

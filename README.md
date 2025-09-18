@@ -26,6 +26,8 @@ Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
 
 ## Projektstruktur
 - `src/dashboardtool/`: Zentrale Konfigurationen, Themes und Layouts.
+- `src/dashboardtool/gui.py`: Baut die komplette GUI-Struktur samt Sidebar und
+  Responsiv-Verhalten als leicht verständliches Datenobjekt auf.
 - `modules/`: Basismodul plus Beispiel-Module, alle folgen den Standards.
 - `modules/php/`: PHP-Komponenten, werden automatisch per `php -l` geprüft.
 - `tests/`: Pytest-basierte ("Pytest": Python-Testframework) Tests für Module und Checks.
@@ -57,6 +59,8 @@ Breakpoints ("Breakpoint": Umschaltpunkt für responsives Verhalten) stehen in
 
 ## Weiterentwicklung
 - Module sollen sich an `ModuleStandard` orientieren und Tastenkürzel anbieten.
+- `DashboardApp` bündelt Module zu einem vollwertigen GUI-Modell inklusive
+  Sidebar, Validierung und Selbstheilungs-Checks.
 - Selbstheilung: Bei fehlenden Ressourcen muss das Modul automatisch Ersatz anlegen.
 - Barrierefreiheit hat Priorität: klare Kontraste, Fokus-Ringe, Screenreader-Texte.
 - Debugging-Tools speichern strukturierte JSON-Zeilen, sodass Support-Teams
