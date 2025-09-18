@@ -27,8 +27,21 @@ class ModuleStandard:
             "focus": "CTRL+ALT+F",
             "toggle_visibility": "CTRL+ALT+V",
             "detach": "CTRL+ALT+D",
+            "maximize": "CTRL+ALT+M",
         }
     )
+
+    def as_dict(self) -> Dict[str, int | bool | Dict[str, str]]:
+        """Stellt Layoutvorgaben für die GUI verständlich dar."""
+
+        return {
+            "min_width": self.min_width,
+            "min_height": self.min_height,
+            "padding": self.padding,
+            "allow_detach": self.allow_detach,
+            "allow_maximize": self.allow_maximize,
+            "keyboard_shortcuts": dict(self.keyboard_shortcuts),
+        }
 
 
 @dataclass(frozen=True)
