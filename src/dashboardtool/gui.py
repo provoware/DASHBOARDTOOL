@@ -105,12 +105,19 @@ class DashboardApp:
         storage_directories = sorted(
             {tile["storage_directory"] for tile in module_tiles}
         )
+        interval = max(0, self.config.autosave_interval_minutes)
+        if interval <= 0:
+            next_run_hint = "läuft sofort nach jeder Änderung"
+        elif interval == 1:
+            next_run_hint = "spätestens in 1 Minute"
+        else:
+            next_run_hint = f"spätestens in {interval} Minuten"
         return {
             "timestamp": now.isoformat(),
             "autosave": {
                 "interval_minutes": self.config.autosave_interval_minutes,
                 "triggers": self.config.autosave_triggers,
-                "next_run_hint": "spätestens in 10 Minuten",  # Laienhinweis
+                "next_run_hint": next_run_hint,  # Laienhinweis
             },
             "storage_directories": storage_directories,
             "module_count": len(module_tiles),
@@ -216,13 +223,22 @@ class DashboardApp:
                 )
                 recovery_actions.extend(validation.get("solutions", []))
             elif validation.get("warnings"):
+                recovery_actions.append(
+                    f"Modul '{tile['display_name']}' hat Hinweise zur Optimierung."
+                )
                 recovery_actions.extend(validation.get("solutions", []))
-        if not recovery_actions:
-            recovery_actions.append(
+        deduped_actions: List[str] = []
+        seen: set[str] = set()
+        for action in recovery_actions:
+            if action not in seen:
+                deduped_actions.append(action)
+                seen.add(action)
+        if not deduped_actions:
+            deduped_actions.append(
                 "Alle Module liefern vollständige Daten – keine Sofortmaßnahmen nötig."
             )
         return {
-            "recommended_actions": recovery_actions,
+            "recommended_actions": deduped_actions,
             "auto_checks": [
                 "Verzeichnis-Prüfung: Alle Speicherorte existieren.",
                 "Theme-Prüfung: Farbkontraste wurden bewertet.",

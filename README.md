@@ -33,7 +33,9 @@ Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
 - `tests/`: Pytest-basierte ("Pytest": Python-Testframework) Tests für Module und Checks.
 - `tools/`: Skripte für Entwicklungsaufgaben, z.B. PHP-Syntaxprüfung und
   `venv_setup.py` für die automatische Umgebungseinrichtung.
-- `docs/`: Dokumentationen mit Modul-Standards und Design-Vorgaben.
+- `docs/`: Dokumentationen mit Modul-Standards und Design-Vorgaben. Die neue
+  Datei `docs/user_and_developer_guide.md` erklärt Bedienung und Erweiterung in
+  einfacher Sprache.
 
 ## Automatisierung
 - `make setup` legt eine neue virtuelle Umgebung an oder aktualisiert sie.

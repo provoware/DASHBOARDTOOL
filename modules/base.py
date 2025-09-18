@@ -38,6 +38,23 @@ class ModuleValidationResult:
     warnings: list[str] = field(default_factory=list)
     solutions: list[str] = field(default_factory=list)
 
+    def __post_init__(self) -> None:
+        """Säubert die Einträge und entfernt Dubletten."""
+
+        for field_name in ("errors", "warnings", "solutions"):
+            items = getattr(self, field_name)
+            seen: dict[str, None] = {}
+            cleaned: list[str] = []
+            for value in items:
+                if not value:
+                    continue
+                text = str(value).strip()
+                if not text or text in seen:
+                    continue
+                seen[text] = None
+                cleaned.append(text)
+            object.__setattr__(self, field_name, cleaned)
+
     @property
     def is_valid(self) -> bool:
         return not self.errors
@@ -81,7 +98,12 @@ class ModuleContext:
         """Stellt das Speicherverzeichnis für ein Modul bereit."""
 
         safe_identifier = module_identifier or "module"
-        target = self.storage_path / safe_identifier
+        sanitized = "".join(
+            ch if ch.isalnum() or ch in {"-", "_"} else "_" for ch in safe_identifier
+        ).strip("_")
+        if not sanitized:
+            sanitized = "module"
+        target = self.storage_path / sanitized
         target.mkdir(parents=True, exist_ok=True)
         return target
 
@@ -105,6 +127,17 @@ class DashboardModule:
         self.layout_spec = self.context.config.standards
         self.storage_directory = self.context.ensure_storage_dir(self.identifier)
 
+    def _default_theme(self) -> Dict[str, str]:
+        """Wählt ein Basisfarbschema als Fallback."""
+
+        themes = self.context.config.themes
+        if "aurora" in themes:
+            return dict(themes["aurora"])
+        if themes:
+            first_theme = next(iter(themes.values()))
+            return dict(first_theme)
+        return {}
+
     def render(self) -> Dict[str, Any]:
         """Erzeugt strukturierte Daten für die GUI-Schicht."""
 
@@ -124,8 +157,9 @@ class DashboardModule:
             if key not in payload:
                 errors.append(f"Pflichtfeld '{key}' fehlt. Bitte in render() ergänzen.")
                 solutions.append(
-                    "Im Modul bitte den Schlüssel 'component' und 'title' setzen, "
-                    "damit die Oberfläche weiß, was angezeigt werden soll."
+                    "Bitte den Schlüssel "
+                    f"'{key}' im Rückgabewert von render() ergänzen, damit die "
+                    "Oberfläche weiß, was dargestellt wird."
                 )
 
         theme = payload.get("theme")
@@ -162,6 +196,11 @@ class DashboardModule:
             solutions.append(
                 "Eigene Tastenkürzel können unter 'keyboard_shortcuts' als Wörterbuch "
                 "mit verständlichen Kürzeln ergänzt werden."
+            )
+        elif not isinstance(shortcuts, dict):
+            errors.append("Tastenkürzel müssen als Wörterbuch mit Befehlen vorliegen.")
+            solutions.append(
+                "Bitte 'keyboard_shortcuts' als Wörterbuch angeben, z.B. {'focus': 'CTRL+ALT+F'}."
             )
 
         return ModuleValidationResult(
@@ -223,15 +262,19 @@ class DashboardModule:
 
         payload = dict(self.render())
         validation = self._validate_payload(payload)
+        fallback_theme = self._default_theme()
         theme = payload.get("theme")
-        if not isinstance(theme, dict):
-            theme = self.context.config.get_theme("aurora")
-        shortcuts = (
-            payload.get("keyboard_shortcuts")
-            or self.context.config.standards.keyboard_shortcuts
-        )
-        payload.setdefault("keyboard_shortcuts", shortcuts)
-        payload.setdefault("theme", theme)
+        if isinstance(theme, dict):
+            theme = {**fallback_theme, **theme}
+        else:
+            theme = fallback_theme
+        raw_shortcuts = payload.get("keyboard_shortcuts")
+        if isinstance(raw_shortcuts, dict):
+            shortcuts = dict(raw_shortcuts)
+        else:
+            shortcuts = dict(self.context.config.standards.keyboard_shortcuts)
+        payload["theme"] = theme
+        payload["keyboard_shortcuts"] = shortcuts
 
         return {
             "identifier": self.identifier,

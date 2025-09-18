@@ -15,6 +15,6 @@
 - [x] Validierung aller Ein- und Ausgaben einrichten ("Validierung": Überprüfung)
 - [x] Benutzerfreundliche Fehlermeldungen mit Lösungsvorschlägen hinzufügen
 - [x] Mockup und Logo gestalten
-- [ ] Ausführliche Nutzerhilfe und Entwicklerdokumentation schreiben
+- [x] Ausführliche Nutzerhilfe und Entwicklerdokumentation schreiben
 - [x] Responsive Frontend-Implementierung mit Breakpoint-gesteuertem Grid anlegen
 - [x] Debug-Modul in die grafische Oberfläche einbetten (Live-Stream der Logdaten)

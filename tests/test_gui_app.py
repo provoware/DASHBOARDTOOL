@@ -52,3 +52,31 @@ def test_self_healing_includes_solutions(module_context: ModuleContext) -> None:
     actions = payload["self_healing"]["recommended_actions"]
     assert any("meldet fehlende Felder" in action for action in actions)
     assert any("Theme" in action or "Farben" in action for action in actions)
+
+
+def test_self_healing_deduplicates_repeated_solutions(
+    module_context: ModuleContext,
+) -> None:
+    class MissingThemeA(DashboardModule):
+        identifier = "missing_a"
+        display_name = "Fehlende Farben A"
+        description = "Kein Theme"
+
+        def render(self) -> dict[str, object]:
+            return {"component": "missing_a", "title": "Fehlende Farben A"}
+
+    class MissingThemeB(DashboardModule):
+        identifier = "missing_b"
+        display_name = "Fehlende Farben B"
+        description = "Kein Theme"
+
+        def render(self) -> dict[str, object]:
+            return {"component": "missing_b", "title": "Fehlende Farben B"}
+
+    app = DashboardApp(
+        [MissingThemeA(context=module_context), MissingThemeB(context=module_context)]
+    )
+    actions = app.render()["self_healing"]["recommended_actions"]
+
+    assert sum("Hinweise zur Optimierung" in action for action in actions) == 2
+    assert sum("context.config.get_theme" in action for action in actions) == 1
