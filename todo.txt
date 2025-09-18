@@ -11,9 +11,10 @@
 - [ ] Linke, aufklappbare Sidebar für Modulauswahl erstellen ("Sidebar": Seitenleiste)
 - [ ] Untermodul-Steuerung mit Maximieren/Detach/Deaktivieren ermöglichen
 - [ ] Persistenten Notizbereich mit Autospeichern einbauen ("persistent": bleibt erhalten)
-- [ ] Echtzeit-Logging- und Debuggingmodul integrieren ("Logging": Protokollierung)
+- [x] Echtzeit-Logging- und Debuggingmodul integrieren ("Logging": Protokollierung)
 - [ ] Validierung aller Ein- und Ausgaben einrichten ("Validierung": Überprüfung)
 - [ ] Benutzerfreundliche Fehlermeldungen mit Lösungsvorschlägen hinzufügen
 - [ ] Mockup und Logo gestalten
 - [ ] Ausführliche Nutzerhilfe und Entwicklerdokumentation schreiben
 - [ ] Responsive Frontend-Implementierung mit Breakpoint-gesteuertem Grid anlegen
+- [ ] Debug-Modul in die grafische Oberfläche einbetten (Live-Stream der Logdaten)

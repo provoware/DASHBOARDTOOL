@@ -105,6 +105,11 @@ class DashboardConfig:
         breakpoint = self.responsive_profile.for_width(width)
         return breakpoint.to_dict()
 
+    def ensure_directories(self) -> None:
+        """Legt notwendige Verzeichnisse an, falls sie fehlen."""
+
+        self.log_directory.mkdir(parents=True, exist_ok=True)
+
 
 DEFAULT_CONFIG = DashboardConfig()
 """Global abrufbare Konfiguration mit Standards und Farbthemen."""

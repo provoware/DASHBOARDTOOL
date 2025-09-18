@@ -27,8 +27,10 @@ class NotesModule(DashboardModule):
             "title": self.display_name,
             "theme": theme,
             "autosave_interval": self.context.config.autosave_interval_minutes,
+            "autosave_triggers": self.context.config.autosave_triggers,
             "breakpoints": self.context.config.responsive_profile.as_dicts(),
             "keyboard_shortcuts": self.context.config.standards.keyboard_shortcuts,
+            "storage_directory": str(self.storage_directory),
         }
 
     def write(self, note_id: str, content: str) -> None:

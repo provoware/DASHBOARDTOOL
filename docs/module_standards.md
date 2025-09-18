@@ -28,3 +28,6 @@ Bedienung und Optik konsistent bleiben.
 - Autosave löst bei Feldwechsel, Timer (alle 10 Minuten) und beim Schließen aus.
 - Daten werden im Pfad `var/data` abgelegt; Unterordner pro Modul.
 - Bei fehlenden Daten versucht das Modul eine Selbstheilung (z.B. Standarddatei anlegen).
+- Logdateien ("Logdatei": Textdatei mit Meldungen) liegen unter `var/log/dashboardtool`
+  und müssen im JSON-Zeilen-Format gespeichert werden, damit sie maschinenlesbar
+  und für Laien verständlich kommentiert sind.

@@ -39,6 +39,15 @@ Qualitätsansprüchen an Optik, Tests und Selbstheilungsmechanismen.
 - `make lint` führt Formatierung plus Pytest und PHP-Check aus.
 - `make php-lint` verwendet `tools/php_syntax_check.py`.
 
+## Verfügbare Module
+- **Notizbereich** (`modules/notes.py`): Speichert Texte persistent und liefert
+  Autosave-Hinweise inklusive Auslöserliste ("Auslöser": Ereignis, das etwas
+  startet) sowie das Zielverzeichnis für Dateien.
+- **Diagnosemodul** (`modules/debug.py`): Schreibt Echtzeit-Logs ("Log":
+  Protokollzeile) in `var/log/dashboardtool/debug.log`, stellt gefilterte Listen
+  bereit und sorgt für Selbstheilung, indem alte Protokolle beim Start geladen
+  werden.
+
 ## Farb- und Layoutrichtlinien
 Die Datei `src/dashboardtool/themes.py` definiert vier kontrastreiche Farbwelten und
 liefert Hilfsfunktionen, um Kontrastwerte zu prüfen. Layout-Vorgaben inklusive
@@ -50,3 +59,5 @@ Breakpoints ("Breakpoint": Umschaltpunkt für responsives Verhalten) stehen in
 - Module sollen sich an `ModuleStandard` orientieren und Tastenkürzel anbieten.
 - Selbstheilung: Bei fehlenden Ressourcen muss das Modul automatisch Ersatz anlegen.
 - Barrierefreiheit hat Priorität: klare Kontraste, Fokus-Ringe, Screenreader-Texte.
+- Debugging-Tools speichern strukturierte JSON-Zeilen, sodass Support-Teams
+  Fehler auch ohne Spezialwissen nachvollziehen können.
